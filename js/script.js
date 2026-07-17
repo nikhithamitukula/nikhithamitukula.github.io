@@ -281,7 +281,7 @@ if (backToTopBtn) {
 const copyButtons = document.querySelectorAll('.copy-btn');
 
 copyButtons.forEach(button => {
-    button.addEventListener('click', () => {
+    button.addEventListener('click', (e) => {
         const textToCopy = button.getAttribute('data-copy');
         const tooltip = button.querySelector('.tooltip');
         
@@ -294,6 +294,23 @@ copyButtons.forEach(button => {
                     tooltip.innerText = 'Copy';
                 }, 2000);
             }
+
+            // Create Floating Success Bubble
+            const bubble = document.createElement('span');
+            bubble.className = 'copy-success-bubble';
+            bubble.innerText = 'Copied!';
+            document.body.appendChild(bubble);
+
+            const rect = button.getBoundingClientRect();
+            const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            
+            bubble.style.left = `${rect.left + rect.width / 2 + scrollLeft}px`;
+            bubble.style.top = `${rect.top + scrollTop - 10}px`;
+
+            setTimeout(() => {
+                bubble.remove();
+            }, 800);
         }).catch(err => {
             console.error('Failed to copy text: ', err);
         });
@@ -439,6 +456,106 @@ skillPills.forEach(pill => {
         pill.classList.remove('highlight-pill');
         projectCards.forEach(card => {
             card.classList.remove('highlight-card', 'fade-card');
+        });
+    });
+});
+
+// ===== Mobile Carousel Scrollspy Indicators =====
+const projectsGrid = document.querySelector('.projects-grid');
+const indicatorDots = document.querySelectorAll('.indicator-dot');
+
+if (projectsGrid && indicatorDots.length > 0) {
+    projectsGrid.addEventListener('scroll', () => {
+        const scrollLeft = projectsGrid.scrollLeft;
+        const firstCard = projectsGrid.querySelector('.project-card');
+        if (firstCard) {
+            const cardWidth = firstCard.offsetWidth + 16; // card width + gap
+            const activeIndex = Math.round(scrollLeft / cardWidth);
+            
+            indicatorDots.forEach((dot, index) => {
+                if (index === activeIndex) {
+                    dot.classList.add('active');
+                } else {
+                    dot.classList.remove('active');
+                }
+            });
+        }
+    });
+
+    // Tap on dots to scroll to that project card
+    indicatorDots.forEach(dot => {
+        dot.addEventListener('click', () => {
+            const slideIndex = parseInt(dot.getAttribute('data-slide'));
+            const firstCard = projectsGrid.querySelector('.project-card');
+            if (firstCard) {
+                const cardWidth = firstCard.offsetWidth + 16;
+                projectsGrid.scrollTo({
+                    left: slideIndex * cardWidth,
+                    behavior: 'smooth'
+                });
+            }
+        });
+    });
+}
+
+// ===== Mobile FAB & Bottom Sheet =====
+const mobileFab = document.getElementById('mobile-fab');
+const bottomSheet = document.getElementById('bottom-sheet');
+const sheetOverlay = document.getElementById('sheet-overlay');
+const sheetItems = document.querySelectorAll('.sheet-item');
+
+function openBottomSheet() {
+    if (bottomSheet) {
+        bottomSheet.classList.add('open');
+        document.body.style.overflow = 'hidden'; // Lock screen scroll
+    }
+}
+
+function closeBottomSheet() {
+    if (bottomSheet) {
+        bottomSheet.classList.remove('open');
+        // Keep body scroll locked only if modal or mobile menu is open
+        const modalEl = document.getElementById('project-modal');
+        const mobileMenu = document.querySelector('.mobile-menu');
+        const modalOpen = modalEl && modalEl.classList.contains('open');
+        const menuOpen = mobileMenu && mobileMenu.classList.contains('open');
+        if (!modalOpen && !menuOpen) {
+            document.body.style.overflow = '';
+        }
+    }
+}
+
+if (mobileFab) {
+    mobileFab.addEventListener('click', openBottomSheet);
+}
+
+if (sheetOverlay) {
+    sheetOverlay.addEventListener('click', closeBottomSheet);
+}
+
+sheetItems.forEach(item => {
+    item.addEventListener('click', closeBottomSheet);
+});
+
+// ===== Skills Tab Switcher =====
+const skillTabs = document.querySelectorAll('.skills-tab-btn');
+const skillContents = document.querySelectorAll('.skills-tab-content');
+
+skillTabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+        const tabId = tab.getAttribute('data-tab');
+        
+        // Toggle active button
+        skillTabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+
+        // Toggle visible content
+        skillContents.forEach(content => {
+            if (content.id === `tab-${tabId}`) {
+                content.classList.add('active');
+            } else {
+                content.classList.remove('active');
+            }
         });
     });
 });

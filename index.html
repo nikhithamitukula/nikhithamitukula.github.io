@@ -105,8 +105,14 @@
 
                 <!-- Skills -->
                 <div class="bento-card col-span-3 skills-card">
-                    <div class="skill-group">
-                        <h4>Languages</h4>
+                    <div class="skills-tabs-container">
+                        <button class="skills-tab-btn active" data-tab="languages">Languages</button>
+                        <button class="skills-tab-btn" data-tab="frameworks">Frameworks</button>
+                        <button class="skills-tab-btn" data-tab="databases">Databases & Tools</button>
+                    </div>
+                    
+                    <div class="skills-tab-content active" id="tab-languages">
+                        <h4 class="skill-category-title">Languages</h4>
                         <div class="pill-container">
                             <a href="https://learn.microsoft.com/en-us/dotnet/csharp/" target="_blank" rel="noopener noreferrer" class="pill"><i class="devicon-csharp-plain colored"></i> C#</a> 
                             <a href="https://learn.microsoft.com/en-us/dotnet/visual-basic/" target="_blank" rel="noopener noreferrer" class="pill"><i class="devicon-dot-net-plain colored"></i> VB.NET</a> 
@@ -115,8 +121,9 @@
                             <a href="https://developer.mozilla.org/en-US/docs/Web/HTML" target="_blank" rel="noopener noreferrer" class="pill"><i class="devicon-html5-plain colored"></i> HTML/CSS</a>
                         </div>
                     </div>
-                    <div class="skill-group">
-                        <h4>Frameworks</h4>
+                    
+                    <div class="skills-tab-content" id="tab-frameworks">
+                        <h4 class="skill-category-title">Frameworks</h4>
                         <div class="pill-container">
                             <a href="https://dotnet.microsoft.com/" target="_blank" rel="noopener noreferrer" class="pill"><i class="devicon-dotnetcore-plain colored"></i> .NET Core</a> 
                             <a href="https://angular.io/" target="_blank" rel="noopener noreferrer" class="pill"><i class="devicon-angularjs-plain colored"></i> Angular</a> 
@@ -125,8 +132,9 @@
                             <a href="https://jquery.com/" target="_blank" rel="noopener noreferrer" class="pill"><i class="devicon-jquery-plain colored"></i> jQuery</a>
                         </div>
                     </div>
-                    <div class="skill-group">
-                        <h4>Databases & Tools</h4>
+                    
+                    <div class="skills-tab-content" id="tab-databases">
+                        <h4 class="skill-category-title">Databases & Tools</h4>
                         <div class="pill-container">
                             <a href="https://www.microsoft.com/en-us/sql-server" target="_blank" rel="noopener noreferrer" class="pill"><i class="devicon-microsoftsqlserver-plain colored"></i> SQL Server</a> 
                             <a href="https://www.mysql.com/" target="_blank" rel="noopener noreferrer" class="pill"><i class="devicon-mysql-plain colored"></i> MySQL</a> 
@@ -318,7 +326,13 @@
                         <span class="pill pill-small"><i class="devicon-dotnetcore-plain"></i> ASP.NET Web API</span>
                     </div>
                 </div>
-
+            
+            <div class="carousel-indicators">
+                <span class="indicator-dot active" data-slide="0"></span>
+                <span class="indicator-dot" data-slide="1"></span>
+                <span class="indicator-dot" data-slide="2"></span>
+                <span class="indicator-dot" data-slide="3"></span>
+                <span class="indicator-dot" data-slide="4"></span>
             </div>
         </section>
 
@@ -405,6 +419,41 @@
                         <!-- Filled by JS -->
                     </ul>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Sticky FAB -->
+    <button id="mobile-fab" class="mobile-fab" aria-label="Quick contact menu">
+        <i class="fa-solid fa-comments"></i>
+        <span class="fab-pulse"></span>
+    </button>
+
+    <!-- Bottom Sheet Contact Menu -->
+    <div id="bottom-sheet" class="bottom-sheet">
+        <div class="sheet-overlay" id="sheet-overlay"></div>
+        <div class="sheet-content">
+            <div class="sheet-header">
+                <div class="sheet-handle"></div>
+                <h3>Quick Connect</h3>
+            </div>
+            <div class="sheet-body">
+                <a href="mailto:nikhitha.mitukula@gmail.com" class="sheet-item">
+                    <i class="fa-solid fa-envelope"></i>
+                    <span>Send Email</span>
+                </a>
+                <a href="tel:+918096014332" class="sheet-item">
+                    <i class="fa-solid fa-phone"></i>
+                    <span>Call Phone</span>
+                </a>
+                <a href="https://www.linkedin.com/in/nikhitha-mitukula-27a967225" target="_blank" rel="noopener noreferrer" class="sheet-item">
+                    <i class="fa-brands fa-linkedin-in"></i>
+                    <span>LinkedIn</span>
+                </a>
+                <a href="assets/Nikhitha_Mitukula_Resume.pdf" download class="sheet-item">
+                    <i class="fa-solid fa-file-arrow-down"></i>
+                    <span>Resume Download</span>
+                </a>
             </div>
         </div>
     </div>
