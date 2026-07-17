@@ -18,6 +18,9 @@
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
+    <!-- Scroll Progress Glow Bar -->
+    <div id="scroll-progress" class="scroll-progress"></div>
+
     <!-- Custom Cursor -->
     <div class="cursor-dot"></div>
     <div class="cursor-outline"></div>
@@ -214,9 +217,23 @@
         <!-- Projects Section -->
         <section id="projects" class="projects-section fade-in">
             <h2 class="section-title">Featured Projects</h2>
+            
+            <div class="project-filters">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="dotnet">Full-Stack / .NET</button>
+                <button class="filter-btn" data-filter="frontend">Frontend</button>
+                <button class="filter-btn" data-filter="mobile">Mobile</button>
+                <button class="filter-btn" data-filter="database">Databases</button>
+            </div>
+
             <div class="projects-grid">
                 
-                <div class="project-card bento-card">
+                <div class="project-card bento-card" 
+                     data-tags="dotnet frontend database"
+                     data-title="Charles Taylors Adjusting"
+                     data-description="Led application support and optimization for Charles Taylors Adjusting's commercial loss claims management systems. Focused on enhancing query execution times, maintaining maximum system stability, and implementing reliable backend solutions within strict SLAs."
+                     data-details="<li>Successfully resolved 150+ incidents and 50+ high-priority bugs.</li><li>Optimized complex SQL queries, decreasing execution runtimes by over 40%.</li><li>Assisted cross-functional teams in upgrading and migrating legacy architectures.</li>"
+                     data-tech="Angular,.NET Core,SQL Server,C#">
                     <div class="project-top">
                         <i class="fa-solid fa-layer-group text-gradient"></i>
                         <h3>Charles Taylors Adjusting</h3>
@@ -229,7 +246,12 @@
                     </div>
                 </div>
 
-                <div class="project-card bento-card">
+                <div class="project-card bento-card" 
+                     data-tags="backend database"
+                     data-title="CBL – Close Brothers"
+                     data-description="Executed critical migrations and batch job scheduling for CBL Close Brothers' financial systems. Created customized database restores and automated reporting systems to replace legacy systems with modern solutions."
+                     data-details="<li>Migrated Windows batch jobs to Control-M for reliable job execution.</li><li>Designed a zero-defect database restore process covering all potential failure scenarios.</li><li>Upgraded legacy Crystal Reports to modern Jasper Reports powered by SQL and Sybase.</li>"
+                     data-tech="Control-M,Jasper Reports,Sybase,SQL,Database Migration">
                     <div class="project-top">
                         <i class="fa-solid fa-chart-line text-gradient"></i>
                         <h3>CBL – Close Brothers</h3>
@@ -242,7 +264,12 @@
                     </div>
                 </div>
 
-                <div class="project-card bento-card">
+                <div class="project-card bento-card" 
+                     data-tags="dotnet frontend database"
+                     data-title="Allclaims Business Intelligence Tool"
+                     data-description="Designed and built a comprehensive insurance claims business intelligence and lifecycle management tool. Crafted custom SQL Server procedures and optimized core UI components using jQuery and Bootstrap."
+                     data-details="<li>Developed backend data models and complex SQL procedures.</li><li>Designed interactive dashboard reports for claim adjusters and underwriters.</li><li>Conducted rigorous unit and regression testing to maintain zero-defect releases.</li>"
+                     data-tech="VB.Net,SQL Server,Bootstrap,jQuery,Business Intelligence">
                     <div class="project-top">
                         <i class="fa-solid fa-magnifying-glass-chart text-gradient"></i>
                         <h3>Allclaims Business Intelligence Tool</h3>
@@ -256,7 +283,12 @@
                     </div>
                 </div>
 
-                <div class="project-card bento-card">
+                <div class="project-card bento-card" 
+                     data-tags="mobile backend"
+                     data-title="Car World App"
+                     data-description="A cross-platform mobile application used by insurance adjusters on-site to catalog vehicle damage, capture photographic evidence, and calculate damage estimations using custom Web APIs."
+                     data-details="<li>Developed the client interface using jQuery Mobile and Apache Cordova.</li><li>Integrated RESTful Web APIs in ASP.NET for real-time calculation and sync.</li><li>Implemented offline support for remote adjusters.</li>"
+                     data-tech="Apache Cordova,ASP.NET Web API,jQuery Mobile,Mobile Development">
                     <div class="project-top">
                         <i class="fa-solid fa-car text-gradient"></i>
                         <h3>Car World App</h3>
@@ -269,7 +301,12 @@
                     </div>
                 </div>
 
-                <div class="project-card bento-card">
+                <div class="project-card bento-card" 
+                     data-tags="mobile frontend backend"
+                     data-title="D-SKY Mobile App & Website"
+                     data-description="A mobile app and web portal designed for telecom distributors to facilitate real-time barcode scanning, commission tracking, inventory management, and route mapping."
+                     data-details="<li>Built native barcode scanner integration with Cordova plugins.</li><li>Implemented real-time commission tracking dashboards.</li><li>Optimized route mapping APIs for distribution logistics.</li>"
+                     data-tech="Apache Cordova,ASP.NET Web API,Bootstrap,jQuery,Mobile Integration">
                     <div class="project-top">
                         <i class="fa-solid fa-mobile-screen text-gradient"></i>
                         <h3>D-SKY Mobile App & Website</h3>
@@ -348,6 +385,29 @@
             <p>Designed and Built by <span class="text-gradient">Mitukula Nikhitha</span>.</p>
         </div>
     </footer>
+
+    <!-- Project Detail Modal -->
+    <div id="project-modal" class="modal-overlay">
+        <div class="modal-container">
+            <button class="modal-close" id="modal-close" aria-label="Close modal"><i class="fa-solid fa-xmark"></i></button>
+            <div class="modal-body">
+                <div class="modal-header-section">
+                    <span class="modal-badge">Project Details</span>
+                    <h3 id="modal-title" class="modal-title">Project Title</h3>
+                    <div id="modal-tech" class="pill-container modal-tech-container"></div>
+                </div>
+                <div class="modal-content-section">
+                    <h4>Overview</h4>
+                    <p id="modal-desc" class="modal-desc">Project description goes here...</p>
+                    
+                    <h4>Key Achievements & Scope</h4>
+                    <ul id="modal-achievements" class="modal-achievements-list">
+                        <!-- Filled by JS -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <button id="back-to-top" class="back-to-top" aria-label="Back to Top"><i class="fa-solid fa-arrow-up"></i></button>
 

@@ -34,7 +34,6 @@ function calculatePositions() {
         return { id, top, bottom };
     });
 }
-
 // Throttle scroll events with requestAnimationFrame
 function onScroll() {
     if (!isScrolling) {
@@ -42,10 +41,20 @@ function onScroll() {
             const scrollY = window.scrollY;
             
             // 1. Toggle scrolled navbar
-            if (scrollY > 50) {
-                navbar.classList.add('scrolled');
-            } else {
-                navbar.classList.remove('scrolled');
+            if (navbar) {
+                if (scrollY > 50) {
+                    navbar.classList.add('scrolled');
+                } else {
+                    navbar.classList.remove('scrolled');
+                }
+            }
+
+            // Scroll progress bar
+            const scrollProgress = document.getElementById('scroll-progress');
+            if (scrollProgress) {
+                const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+                const progress = totalHeight > 0 ? (scrollY / totalHeight) * 100 : 0;
+                scrollProgress.style.width = `${progress}%`;
             }
 
             // 2. Toggle back-to-top button visibility
@@ -287,6 +296,149 @@ copyButtons.forEach(button => {
             }
         }).catch(err => {
             console.error('Failed to copy text: ', err);
+        });
+    });
+});
+
+// ===== Project Filtering Logic =====
+const filterButtons = document.querySelectorAll('.filter-btn');
+const projectCards = document.querySelectorAll('.project-card');
+
+filterButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        // Toggle active button
+        filterButtons.forEach(btn => btn.classList.remove('active'));
+        button.classList.add('active');
+
+        const filterValue = button.getAttribute('data-filter');
+
+        projectCards.forEach(card => {
+            const tags = card.getAttribute('data-tags') || '';
+            // Handle display & transition classes
+            if (filterValue === 'all' || tags.split(' ').includes(filterValue)) {
+                card.classList.remove('hide');
+            } else {
+                card.classList.add('hide');
+            }
+        });
+    });
+});
+
+// ===== Project Detail Modal =====
+const modal = document.getElementById('project-modal');
+const modalTitle = document.getElementById('modal-title');
+const modalDesc = document.getElementById('modal-desc');
+const modalTech = document.getElementById('modal-tech');
+const modalAchievements = document.getElementById('modal-achievements');
+const modalClose = document.getElementById('modal-close');
+
+projectCards.forEach(card => {
+    card.addEventListener('click', (e) => {
+        // Don't open modal if a child link/pill was clicked
+        if (e.target.closest('.pill') || e.target.closest('a')) {
+            return;
+        }
+
+        const title = card.getAttribute('data-title');
+        const desc = card.getAttribute('data-description');
+        const details = card.getAttribute('data-details');
+        const techList = card.getAttribute('data-tech') ? card.getAttribute('data-tech').split(',') : [];
+
+        // Set title and description
+        if (modalTitle) modalTitle.textContent = title;
+        if (modalDesc) modalDesc.textContent = desc;
+
+        // Set achievements
+        if (modalAchievements) {
+            modalAchievements.innerHTML = details || '';
+        }
+
+        // Set tech pills
+        if (modalTech) {
+            modalTech.innerHTML = '';
+            techList.forEach(tech => {
+                const pill = document.createElement('span');
+                pill.className = 'pill pill-small';
+                pill.textContent = tech.trim();
+                modalTech.appendChild(pill);
+            });
+        }
+
+        // Open modal
+        if (modal) {
+            modal.classList.add('open');
+            document.body.style.overflow = 'hidden'; // prevent background scrolling
+        }
+    });
+});
+
+// Close modal function
+function closeModal() {
+    if (modal) {
+        modal.classList.remove('open');
+        // Restore background scroll only if mobile menu is not open
+        const mobileMenu = document.querySelector('.mobile-menu');
+        if (!mobileMenu || !mobileMenu.classList.contains('open')) {
+            document.body.style.overflow = '';
+        }
+    }
+}
+
+if (modalClose) {
+    modalClose.addEventListener('click', closeModal);
+}
+
+if (modal) {
+    modal.addEventListener('click', (e) => {
+        // Close modal if clicking outside of the modal container
+        if (e.target === modal) {
+            closeModal();
+        }
+    });
+}
+
+// Close modal on Escape key
+window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        closeModal();
+    }
+});
+
+// ===== Skill-to-Project Interactive Highlights =====
+const skillPills = document.querySelectorAll('.skills-card .pill');
+
+skillPills.forEach(pill => {
+    pill.addEventListener('mouseenter', () => {
+        const text = pill.textContent.toLowerCase();
+        let targetTag = '';
+
+        if (text.includes('c#') || text.includes('.net') || text.includes('vb')) {
+            targetTag = 'dotnet';
+        } else if (text.includes('angular') || text.includes('javascript') || text.includes('html') || text.includes('jquery') || text.includes('bootstrap')) {
+            targetTag = 'frontend';
+        } else if (text.includes('cordova')) {
+            targetTag = 'mobile';
+        } else if (text.includes('sql') || text.includes('mysql') || text.includes('sybase')) {
+            targetTag = 'database';
+        }
+
+        if (targetTag) {
+            pill.classList.add('highlight-pill');
+            projectCards.forEach(card => {
+                const tags = card.getAttribute('data-tags') || '';
+                if (tags.split(' ').includes(targetTag)) {
+                    card.classList.add('highlight-card');
+                } else {
+                    card.classList.add('fade-card');
+                }
+            });
+        }
+    });
+
+    pill.addEventListener('mouseleave', () => {
+        pill.classList.remove('highlight-pill');
+        projectCards.forEach(card => {
+            card.classList.remove('highlight-card', 'fade-card');
         });
     });
 });
