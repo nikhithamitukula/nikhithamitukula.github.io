@@ -16,15 +16,84 @@ mobileLinks.forEach(link => {
     link.addEventListener('click', toggleMenu);
 });
 
-// Navbar background on scroll
+// Performant Scroll Handling (Combined Scrollspy + Navbar Toggle + Back to Top)
 const navbar = document.querySelector('.navbar');
-window.addEventListener('scroll', () => {
-    if (window.scrollY > 50) {
-        navbar.classList.add('scrolled');
-    } else {
-        navbar.classList.remove('scrolled');
+const backToTopBtn = document.getElementById('back-to-top');
+const sections = document.querySelectorAll('section');
+const navLinksList = document.querySelectorAll('.nav-links .nav-link');
+
+let sectionPositions = [];
+let isScrolling = false;
+
+// Pre-calculate heights & positions to avoid reading layout properties during scroll ticks
+function calculatePositions() {
+    sectionPositions = Array.from(sections).map(section => {
+        const id = section.getAttribute('id');
+        const top = section.offsetTop - 150; // offset for nav heights
+        const bottom = top + section.offsetHeight;
+        return { id, top, bottom };
+    });
+}
+
+// Throttle scroll events with requestAnimationFrame
+function onScroll() {
+    if (!isScrolling) {
+        window.requestAnimationFrame(() => {
+            const scrollY = window.scrollY;
+            
+            // 1. Toggle scrolled navbar
+            if (scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+
+            // 2. Toggle back-to-top button visibility
+            if (backToTopBtn) {
+                if (scrollY > 400) {
+                    backToTopBtn.classList.add('show');
+                } else {
+                    backToTopBtn.classList.remove('show');
+                }
+            }
+
+            // 3. High-performance Scroll Spy
+            let currentSectionId = '';
+            for (let i = 0; i < sectionPositions.length; i++) {
+                const pos = sectionPositions[i];
+                if (scrollY >= pos.top && scrollY < pos.bottom) {
+                    currentSectionId = pos.id;
+                    break;
+                }
+            }
+
+            navLinksList.forEach(link => {
+                if (link.getAttribute('href') === `#${currentSectionId}`) {
+                    link.classList.add('active');
+                } else {
+                    link.classList.remove('active');
+                }
+            });
+
+            isScrolling = false;
+        });
+        isScrolling = true;
     }
+}
+
+window.addEventListener('scroll', onScroll);
+window.addEventListener('resize', () => {
+    calculatePositions();
+    onScroll();
 });
+window.addEventListener('load', () => {
+    calculatePositions();
+    onScroll();
+});
+
+// Run calculation initially
+calculatePositions();
+onScroll();
 
 // Scroll Reveal Animation (Intersection Observer)
 const fadeElements = document.querySelectorAll('.fade-in');
@@ -189,49 +258,15 @@ if (submitBtn) {
     });
 }
 
-// 5. Scroll Spy Navigation
-const sections = document.querySelectorAll('section');
-const navLinksList = document.querySelectorAll('.nav-links .nav-link');
-
-function scrollSpy() {
-    let currentSectionId = '';
-    
-    sections.forEach(section => {
-        const sectionTop = section.offsetTop - 120; // adjust offset for header height
-        const sectionHeight = section.clientHeight;
-        if (window.scrollY >= sectionTop && window.scrollY < sectionTop + sectionHeight) {
-            currentSectionId = section.getAttribute('id');
-        }
-    });
-
-    navLinksList.forEach(link => {
-        link.classList.remove('active');
-        if (link.getAttribute('href') === `#${currentSectionId}`) {
-            link.classList.add('active');
-        }
+// 5. Back to Top Button Click Event
+if (backToTopBtn) {
+    backToTopBtn.addEventListener('click', () => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
     });
 }
-
-window.addEventListener('scroll', scrollSpy);
-window.addEventListener('load', scrollSpy);
-
-// 6. Back to Top Button
-const backToTopBtn = document.getElementById('back-to-top');
-
-window.addEventListener('scroll', () => {
-    if (window.scrollY > 400) {
-        backToTopBtn.classList.add('show');
-    } else {
-        backToTopBtn.classList.remove('show');
-    }
-});
-
-backToTopBtn.addEventListener('click', () => {
-    window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-    });
-});
 
 // 7. Copy to Clipboard Feature
 const copyButtons = document.querySelectorAll('.copy-btn');
